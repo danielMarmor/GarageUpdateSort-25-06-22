@@ -3,9 +3,11 @@ import "./App.css";
 import Garage from "./components/Garage";
 import AddCar from "./components/AddCar";
 import FilterCar from "./components/FilterCar";
+import SortCars from "./components/SortCars";
 
 class App extends Component {
   static my_car_seq = 4;
+  former_my_cars_state = null;
   state = {
     my_cars: [
       { brand: "Honda", model: "civic", color: "blue", year: 2018, id: 1 },
@@ -25,6 +27,7 @@ class App extends Component {
       },
     ],
     year_filter: new Date().getFullYear() - 10,
+    sortBy : "brand"
   };
 
   deleteCar = (_id) => {
@@ -38,6 +41,12 @@ class App extends Component {
       my_cars: [{ ..._car, id: App.my_car_seq++ }, ...this.state.my_cars],
     });
   };
+  sortCars =(sortBy)=> {
+      this.setState({
+        ...this.state,
+        sortBy : sortBy
+      })
+  }
 
   updateCar = (_car) => {
     /*
@@ -74,22 +83,43 @@ class App extends Component {
       year_filter: _year,
     });
   };
+  revertToPreviousState =()=>{
+      if (this.former_my_cars_state != null){
+          this.setState({
+          ...this.state,
+          my_cars : this.former_my_cars_state
+          });        
+      }
+      
+  }
+  componentDidUpdate(previousProps, previousState){
+      this.former_my_cars_state = previousState.my_cars;
+  }
 
   render() {
     return (
       <div className="App">
         <h1>Hello React!</h1>
-        <AddCar add_car={this.addCar} />
+        <AddCar
+         add_car={this.addCar}
+         revertToPreviousState={this.revertToPreviousState}/>
+        <div className="filtersContainer">
         <FilterCar
           year_filter={this.state.year_filter}
           set_year_filter={this.setYearFilter}
         />
+        <SortCars
+          sortBy={this.state.sortBy}
+          sortCars={this.sortCars}
+        />
+        </div>  
         <Garage
           cars={this.state.my_cars}
           year_filter={this.state.year_filter}
           update_car={this.updateCar}
           delete_car={this.deleteCar}
           get_car={this.get_car}
+          sortBy={this.state.sortBy}
         />
 
         {/*  AddCar add_car = {this.addCar}

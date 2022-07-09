@@ -92,6 +92,7 @@ class AddCar extends Component {
             </select>
           </p>
           <button type="submit">Buy New Car</button>
+          <button type="button" onClick={this.props.revertToPreviousState}>Undo Operation</button>
         </form>
         <hr />
       </div>

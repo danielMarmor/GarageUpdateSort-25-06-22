@@ -22,7 +22,6 @@ class FilterCar extends Component {
               value={this.props.year_filter}
             />
           </p>
-          <hr/>
           </div>
         );
       }
